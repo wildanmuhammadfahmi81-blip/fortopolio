@@ -1,20 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   /* ===============================
-     MENU HAMBURGER
+     MENU HAMBURGER (ENHANCED)
   =============================== */
   const menuToggle = document.getElementById("menuToggle");
   const navMenu = document.getElementById("navMenu");
+  
+  // Create backdrop element
+  const backdrop = document.createElement("div");
+  backdrop.className = "menu-backdrop";
+  document.body.appendChild(backdrop);
 
   if (menuToggle && navMenu) {
-    menuToggle.addEventListener("click", () => {
+    // Toggle menu
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      menuToggle.classList.toggle("active");
       navMenu.classList.toggle("active");
+      backdrop.classList.toggle("active");
+      
+      // Prevent body scroll when menu is open
+      if (navMenu.classList.contains("active")) {
+        document.body.style.overflow = "hidden";
+      } else {
+        document.body.style.overflow = "";
+      }
     });
 
+    // Close menu when clicking a link
     document.querySelectorAll("#navMenu a").forEach(link => {
       link.addEventListener("click", () => {
+        menuToggle.classList.remove("active");
         navMenu.classList.remove("active");
+        backdrop.classList.remove("active");
+        document.body.style.overflow = "";
       });
+    });
+
+    // Close menu when clicking backdrop
+    backdrop.addEventListener("click", () => {
+      menuToggle.classList.remove("active");
+      navMenu.classList.remove("active");
+      backdrop.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+
+    // Close menu on ESC key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navMenu.classList.contains("active")) {
+        menuToggle.classList.remove("active");
+        navMenu.classList.remove("active");
+        backdrop.classList.remove("active");
+        document.body.style.overflow = "";
+      }
     });
   }
 
